@@ -1,0 +1,9 @@
+- hosts: localhost
+  pre_tasks:
+  - name: Update Apt
+    become: true
+    apt:
+      force_apt_get: true
+      update_cache: true
+  tasks:
+    - include: tasks/vscode.yml

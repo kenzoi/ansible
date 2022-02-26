@@ -1,0 +1,13 @@
+- name: Download VSCode deb file
+  get_url:
+    url: https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
+    dest: '{{ ansible_env.HOME }}/Downloads/code.deb'
+- name: Install Visual Studio Code
+  become: true
+  apt:
+    force_apt_get: true
+    deb: '{{ ansible_env.HOME }}/Downloads/code.deb'
+- name: Remove VSCode deb file
+  file:
+    path: '{{ ansible_env.HOME }}/Downloads/code.deb'
+    state: absent
