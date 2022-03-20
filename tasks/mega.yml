@@ -1,0 +1,20 @@
+- name: Download Mega deb file
+  get_url:
+    url: https://mega.nz/linux/repo/Debian_11/amd64/megasync-Debian_11_amd64.deb
+    dest: '{{ ansible_env.HOME }}/Downloads/megasync-Debian_11_amd64.deb'
+  tags:
+    mega
+- name: Install Mega
+  become: true
+  apt:
+    force_apt_get: true
+    deb: '{{ ansible_env.HOME }}/Downloads/megasync-Debian_11_amd64.deb'
+  tags:
+    mega
+- name: Remove Mega deb file
+  file:
+    path: '{{ ansible_env.HOME }}/Downloads/megasync-Debian_11_amd64.deb'
+    state: absent
+  tags:
+    mega
+

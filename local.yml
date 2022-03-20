@@ -7,3 +7,4 @@
       update_cache: true
   tasks:
     - include: tasks/vscode.yml
+    - include: tasks/mega.yml
