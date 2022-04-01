@@ -1,0 +1,79 @@
+- name: Create Gnome Appindicator Extension folder
+  become: true
+  file:
+    path:  '/usr/share/gnome-shell/extensions/appindicatorsupport@rgcjonas.gmail.com' 
+    state: directory
+  tags:
+    gnome
+- name: Download Appindicator Gnome Extension
+  get_url:
+    url: https://extensions.gnome.org/extension-data/appindicatorsupportrgcjonas.gmail.com.v42.shell-extension.zip 
+    dest: '{{ ansible_env.HOME }}/Downloads/appindicatorsupportrgcjonas.gmail.com.v42.shell-extension.zip'
+  tags:
+    gnome
+- name: Extract Appindicator Gnome Extension
+  become: true
+  unarchive:
+    src: '{{ ansible_env.HOME }}/Downloads/appindicatorsupportrgcjonas.gmail.com.v42.shell-extension.zip'
+    dest:  '/usr/share/gnome-shell/extensions/appindicatorsupport@rgcjonas.gmail.com'
+  tags:
+    gnome
+- name: Fix metadata.json permission
+  become: true
+  file:
+    path: /usr/share/gnome-shell/extensions/appindicatorsupport@rgcjonas.gmail.com/metadata.json
+    mode: 0644
+  tags:
+    gnome
+- name: Remove Appindicator compressed file
+  file:
+    path: '{{ ansible_env.HOME }}/Downloads/appindicatorsupportrgcjonas.gmail.com.v42.shell-extension.zip' 
+    state: absent
+  tags:
+    gnome
+- name: Create a user profile in /etc/dconf/profile/user
+  become: true
+  file:
+    path: '/etc/dconf/profile/user'
+    state: touch
+  tags:
+    gnome
+- name: Add a user profile to /etc/dconf/profile/user
+  become: true
+  blockinfile:
+    path: '/etc/dconf/profile/user'
+    block: |
+      user-db:user
+      system-db:local
+  tags:
+    gnome
+- name: Create /etc/dconf/db/local.d/ folder
+  become: true
+  file:
+    path: '/etc/dconf/db/local.d/'
+    state: directory
+  tags:
+    gnome
+- name: Create a local database for machine-wide settings in /etc/dconf/db/local.d/00-extensions
+  become: true
+  file:
+    path: '/etc/dconf/db/local.d/00-extensions' 
+    state: touch
+  tags:
+    gnome
+- name: Enable machine-wide extensions
+  become: true
+  blockinfile:
+    path: '/etc/dconf/db/local.d/00-extensions'
+    block: |
+      [org/gnome/shell]
+      # List all extensions that you want to have enabled for all users
+      enabled-extensions=['appindicatorsupport@rgcjonas.gmail.com']
+  tags:
+    gnome
+- name: Update dconf
+  become: true
+  command:
+    cmd: dconf update     
+  tags:
+    gnome

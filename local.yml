@@ -8,3 +8,4 @@
   tasks:
     - include: tasks/vscode.yml
     - include: tasks/mega.yml
+    - include: tasks/gnome_extensions.yml
